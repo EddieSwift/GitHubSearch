@@ -13,16 +13,7 @@ public struct Constants {
     
     public struct NetworkURL {
         static let baseURL = "https://api.github.com/search/repositories?q="
-        static let restURL = "&per_page=15&sort=stars&order=desc"
+        static let pageURL = "&per_page=15&page="
+        static let orderURL = "&sort=stars&order=desc"
     }
 }
-
-// https://api.github.com/search/repositories?q=swiftui&per_page=15&sort=stars&order=desc
-
-// https://api.github.com/search/repositories&q=swiftui&per_page=100
-
-// https://api.github.com/search/repositories?q=swiftui&per_page=10&sort=stars&order=desc
-
-// https://api.github.com/search/repositories?q=swiftui&per_page=10,sort,order}
-
-//     "repository_search_url": "https://api.github.com/search/repositories?q={query}{&page,per_page,sort,order}",

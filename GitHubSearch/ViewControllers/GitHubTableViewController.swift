@@ -12,6 +12,8 @@ class GitHubTableViewController: UITableViewController {
     private var searchBar: UISearchBar!
     private var repositories = [Repository]()
     var activityIndicator = UIActivityIndicatorView(style: .large)
+    var searchBarActivityIndicator = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.medium)
+    let semaphore = DispatchSemaphore(value: 1)
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,22 +28,14 @@ class GitHubTableViewController: UITableViewController {
     
     // MARK: - Network Method
     
-    private func getRepositories() {
-        let activityIndicator = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.medium)
-        searchBar.addSubview(activityIndicator)
-        activityIndicator.frame = searchBar.bounds
-        activityIndicator.startAnimating()
-        
-        startAnimation()
-        
-        guard let searchRepositoryName = searchBar.text else { return }
-        
-        NetworkService.shared.getRepositories(searchRepositoryName) { [weak self] state in
-            activityIndicator.removeFromSuperview()
+    private func getRepositories(page: Int, searchKey: String) {
+        NetworkService.shared.getRepositories(searchRepositoryName: searchKey, page: page) { [weak self] state in
+            self?.searchBarActivityIndicator.removeFromSuperview()
             guard let `self` = self else { return }
             switch state {
             case .success(let repositories):
-                self.repositories = repositories
+                self.repositories.append(contentsOf: repositories)
+                self.semaphore.signal()
                 DispatchQueue.main.async {
                     self.tableView.reloadData()
                 }
@@ -58,6 +52,9 @@ class GitHubTableViewController: UITableViewController {
     
     private func setupMainUI() {
         searchBar = UISearchBar()
+        searchBar.addSubview(searchBarActivityIndicator)
+        searchBarActivityIndicator.frame = searchBar.bounds
+        
         view.addSubview(searchBar)
         searchBar.searchBarStyle = UISearchBar.Style.prominent
         searchBar.placeholder = "Search repositories..."
@@ -124,10 +121,27 @@ extension GitHubTableViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         repositories.removeAll()
         tableView.reloadData()
-        setupActivityIndicator()
-        startAnimation()
         
-        getRepositories()
+        setupActivityIndicator()
+        
+        let firstQueue = DispatchQueue(label: "com.firstQueue", attributes: .concurrent)
+        let secondQueue = DispatchQueue(label: "com.secondQueue", attributes: .concurrent)
+        
+        startAnimation()
+        searchBarActivityIndicator.startAnimating()
+        
+        guard let searchRepositoryName = searchBar.text else { return }
+        
+        firstQueue.async {
+            self.semaphore.wait()
+            self.getRepositories(page: 1, searchKey: searchRepositoryName)
+        }
+        
+        secondQueue.async {
+            self.semaphore.wait()
+            self.getRepositories(page: 2, searchKey: searchRepositoryName)
+        }
+        
         searchBar.text = nil
     }
     

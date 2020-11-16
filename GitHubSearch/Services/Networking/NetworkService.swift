@@ -15,11 +15,13 @@ enum NetworkResponse {
 
 public class NetworkService {
     public static let shared = NetworkService()
-    func getRepositories(_ apiUrl: String, completion: @escaping (NetworkResponse) -> Void) {
+    func getRepositories(searchRepositoryName: String, page: Int, completion: @escaping (NetworkResponse) -> Void) {
         
         var repositories = [Repository]()
         
-        AF.request(Constants.NetworkURL.baseURL + apiUrl + Constants.NetworkURL.restURL).responseJSON { response in
+        let url = Constants.NetworkURL.baseURL + searchRepositoryName + Constants.NetworkURL.pageURL + "\(page)" + Constants.NetworkURL.orderURL
+        
+        AF.request(url).responseJSON { response in
             if response.value != nil {
                 let json = JSON(response.value as Any)
                 let results = json["items"].arrayValue

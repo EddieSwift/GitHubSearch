@@ -7,16 +7,32 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "26B641C7-4E60-4EED-ABC7-57738426E135"
+            uuid = "63EE5AD1-EE56-4604-812F-E7A7E91B695C"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "GitHubSearch/Services/Networking/NetworkService.swift"
+            filePath = "GitHubSearch/ViewControllers/GitHubTableViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "26"
-            endingLineNumber = "26"
-            landmarkName = "getRepositories(_:completion:)"
+            startingLineNumber = "38"
+            endingLineNumber = "38"
+            landmarkName = "getRepositories(page:searchKey:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "A8926FD2-B2AF-43EA-922C-252ED29B8CAA"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "GitHubSearch/ViewControllers/GitHubTableViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "40"
+            endingLineNumber = "40"
+            landmarkName = "getRepositories(page:searchKey:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
